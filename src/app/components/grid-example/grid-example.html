@@ -1,0 +1,51 @@
+<button (click)="salesInvoiceDomainService.salesInvoice.set(TermijnSalesInvoice)">Load Invoice: Term</button>
+<button (click)="salesInvoiceDomainService.salesInvoice.set(RegieSalesInvoice)">Load Invoice: Regie</button>
+<button (click)="salesInvoiceDomainService.salesInvoice.set(WorkOrderSalesInvoice)">Load Invoice: Work Order</button>
+
+<ejs-grid
+    #grid
+    gridLines="None"
+    [dataSource]="salesInvoiceLines()">
+  <e-columns>
+
+    @if(invoiceLineColumns.columnTermIdVisible()) {
+      <e-column field="termId" headerText="[Term]">
+        <ng-template #template let-data>
+          {{ this.salesInvoiceDomainService.getProjectTerm(data.termId)?.displayName }}
+        </ng-template>
+      </e-column>
+    }
+
+    @if(invoiceLineColumns.columnArticleVisible()) {
+      <e-column headerText="[Regie/Work Order]">
+        <ng-template #template let-data>
+          {{ this.salesInvoiceDomainService.getArticle(data.articleCode)?.description }}
+        </ng-template>
+      </e-column>
+    }
+    <e-column field="description" headerText="__" />
+
+    <e-column field="quantity" headerText="__" format="N2" />
+
+    <e-column field="unitOfMeasureCode" headerText="__" />
+
+    <e-column field="pricePerUnit" headerText="__" format="C2" />
+
+    <e-column field="vatId" headerText="__">
+      <ng-template #template let-data>
+        {{ this.salesInvoiceDomainService.getVat(data.vat.id)?.displayText }}
+      </ng-template>
+    </e-column>
+
+    @if (invoiceLineColumns.columnActivityVisible()) {
+      <e-column field="activityId" headerText="[Regie Only Column]">
+        <ng-template #template let-data>
+          {{ activityDisplay(data) }}
+        </ng-template>
+      </e-column>
+    }
+
+    <e-column field="totalAmountExclVAT" headerText="__" [allowEditing]="false" format="C2"></e-column>
+  </e-columns>
+
+</ejs-grid>

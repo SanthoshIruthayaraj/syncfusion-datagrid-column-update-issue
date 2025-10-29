@@ -1,6 +1,10 @@
-<button (click)="salesInvoiceDomainService.salesInvoice.set(TermijnSalesInvoice)">Load Invoice: Term</button>
-<button (click)="salesInvoiceDomainService.salesInvoice.set(RegieSalesInvoice)">Load Invoice: Regie</button>
-<button (click)="salesInvoiceDomainService.salesInvoice.set(WorkOrderSalesInvoice)">Load Invoice: Work Order</button>
+<button (click)="buttonClick('Term')">Load Invoice: Term</button>
+<button (click)="buttonClick('Regie')">Load Invoice: Regie</button>
+<button (click)="buttonClick('Work Order')">Load Invoice: Work Order</button>
+
+<p>Term: {{invoiceLineColumns.columnTermIdVisible()}}</p>
+<p>Regie/Work Order: {{invoiceLineColumns.columnArticleVisible()}}</p>
+<p>Regie Only: {{invoiceLineColumns.columnActivityVisible()}}</p>
 
 <ejs-grid
     #grid
@@ -8,21 +12,33 @@
     [dataSource]="salesInvoiceLines()">
   <e-columns>
 
-    @if(invoiceLineColumns.columnTermIdVisible()) {
+    <!-- @if(invoiceLineColumns.columnTermIdVisible()) {
       <e-column field="termId" headerText="[Term]">
         <ng-template #template let-data>
           {{ this.salesInvoiceDomainService.getProjectTerm(data.termId)?.displayName }}
         </ng-template>
       </e-column>
-    }
+    } -->
+    <e-column field="termId" headerText="[Term]" [visible]="invoiceLineColumns.columnTermIdVisible()">
+      <ng-template #template let-data>
+        {{ this.salesInvoiceDomainService.getProjectTerm(data.termId)?.displayName }}
+      </ng-template>
+    </e-column>
 
-    @if(invoiceLineColumns.columnArticleVisible()) {
+    <!-- @if(invoiceLineColumns.columnArticleVisible()) {
       <e-column headerText="[Regie/Work Order]">
         <ng-template #template let-data>
           {{ this.salesInvoiceDomainService.getArticle(data.articleCode)?.description }}
         </ng-template>
       </e-column>
-    }
+    } -->
+    <e-column field="articleCode"
+          headerText="[Regie/Work Order]"
+          [visible]="invoiceLineColumns.columnArticleVisible()">
+      <ng-template #template let-data>
+        {{ salesInvoiceDomainService.getArticle(data.articleCode)?.description }}
+      </ng-template>
+    </e-column>
     <e-column field="description" headerText="__" />
 
     <e-column field="quantity" headerText="__" format="N2" />
@@ -37,13 +53,20 @@
       </ng-template>
     </e-column>
 
-    @if (invoiceLineColumns.columnActivityVisible()) {
+    <!-- @if (invoiceLineColumns.columnActivityVisible()) {
       <e-column field="activityId" headerText="[Regie Only Column]">
         <ng-template #template let-data>
           {{ activityDisplay(data) }}
         </ng-template>
       </e-column>
-    }
+    } -->
+    <e-column field="activityId"
+          headerText="[Regie Only Column]"
+          [visible]="invoiceLineColumns.columnActivityVisible()">
+      <ng-template #template let-data>
+        {{ activityDisplay(data) }}
+      </ng-template>
+    </e-column>
 
     <e-column field="totalAmountExclVAT" headerText="__" [allowEditing]="false" format="C2"></e-column>
   </e-columns>

@@ -37,26 +37,30 @@ export class GridExample {
   protected readonly TermijnSalesInvoice = TermijnSalesInvoice;
   protected readonly WorkOrderSalesInvoice = WorkOrderSalesInvoice;
 
-  buttonClick(str: string) {
-    let visibleColumns: string[] = []; 
-    let hiddenColumns: string[] = [];
-
-    if (str === "Term") {
-      this.salesInvoiceDomainService.salesInvoice.set(TermijnSalesInvoice);
-      visibleColumns = ['[Term]'];
-      hiddenColumns = ['[Regie/Work Order]', '[Regie Only Column]']
-    } else if (str === "Regie") {
-      this.salesInvoiceDomainService.salesInvoice.set(RegieSalesInvoice);
-      visibleColumns = ['[Regie/Work Order]', '[Regie Only Column]']
-      hiddenColumns = ['[Term]'];
-    } else if (str === "Work Order") {
-      this.salesInvoiceDomainService.salesInvoice.set(WorkOrderSalesInvoice);
-      visibleColumns = ['[Regie/Work Order]']
-      hiddenColumns = ['[Term]', '[Regie Only Column]'];
-    }
-
-    this.grid?.showColumns(visibleColumns);
-    this.grid?.hideColumns(hiddenColumns);
+  buttonClick(type: string) {
+    const configs: Record<string, { invoice: unknown; show: string[]; hide: string[] }> = {
+      Term: {
+        invoice: TermijnSalesInvoice,
+        show: ['[Term]'],
+        hide: ['[Regie/Work Order]', '[Regie Only Column]']
+      },
+      Regie: {
+        invoice: RegieSalesInvoice,
+        show: ['[Regie/Work Order]', '[Regie Only Column]'],
+        hide: ['[Term]']
+      },
+      'Work Order': {
+        invoice: WorkOrderSalesInvoice,
+        show: ['[Regie/Work Order]'],
+        hide: ['[Term]', '[Regie Only Column]']
+      }
+    };
+  
+    const config = configs[type];
+  
+    this.salesInvoiceDomainService.salesInvoice.set(config.invoice);
+    this.grid?.showColumns(config.show);
+    this.grid?.hideColumns(config.hide);
   }
 }
  

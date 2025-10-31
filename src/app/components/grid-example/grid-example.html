@@ -19,7 +19,7 @@
         </ng-template>
       </e-column>
     } -->
-    <e-column field="termId" headerText="[Term]" [visible]="invoiceLineColumns.columnTermIdVisible()">
+    <e-column field="termId" headerText="[Term]">
       <ng-template #template let-data>
         {{ this.salesInvoiceDomainService.getProjectTerm(data.termId)?.displayName }}
       </ng-template>
@@ -33,8 +33,7 @@
       </e-column>
     } -->
     <e-column field="articleCode"
-          headerText="[Regie/Work Order]"
-          [visible]="invoiceLineColumns.columnArticleVisible()">
+          headerText="[Regie/Work Order]">
       <ng-template #template let-data>
         {{ salesInvoiceDomainService.getArticle(data.articleCode)?.description }}
       </ng-template>
@@ -61,8 +60,7 @@
       </e-column>
     } -->
     <e-column field="activityId"
-          headerText="[Regie Only Column]"
-          [visible]="invoiceLineColumns.columnActivityVisible()">
+          headerText="[Regie Only Column]">
       <ng-template #template let-data>
         {{ activityDisplay(data) }}
       </ng-template>

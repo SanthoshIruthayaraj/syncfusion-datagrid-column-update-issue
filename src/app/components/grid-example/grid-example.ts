@@ -38,15 +38,25 @@ export class GridExample {
   protected readonly WorkOrderSalesInvoice = WorkOrderSalesInvoice;
 
   buttonClick(str: string) {
+    let visibleColumns: string[] = []; 
+    let hiddenColumns: string[] = [];
+
     if (str === "Term") {
       this.salesInvoiceDomainService.salesInvoice.set(TermijnSalesInvoice);
+      visibleColumns = ['[Term]'];
+      hiddenColumns = ['[Regie/Work Order]', '[Regie Only Column]']
     } else if (str === "Regie") {
       this.salesInvoiceDomainService.salesInvoice.set(RegieSalesInvoice);
+      visibleColumns = ['[Regie/Work Order]', '[Regie Only Column]']
+      hiddenColumns = ['[Term]'];
     } else if (str === "Work Order") {
       this.salesInvoiceDomainService.salesInvoice.set(WorkOrderSalesInvoice);
+      visibleColumns = ['[Regie/Work Order]']
+      hiddenColumns = ['[Term]', '[Regie Only Column]'];
     }
 
-    setTimeout(()=> this.grid?.refreshColumns(), 50) 
+    this.grid?.showColumns(visibleColumns);
+    this.grid?.hideColumns(hiddenColumns);
   }
 }
  
